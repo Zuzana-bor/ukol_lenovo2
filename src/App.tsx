@@ -39,6 +39,7 @@ function App() {
     )
       .then((response) => response.json())
       .then((data) => setMovies(data.results));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
