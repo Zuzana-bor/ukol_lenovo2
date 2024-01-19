@@ -1,28 +1,22 @@
-import { ChangeEvent, useEffect, useState } from 'react';
 import './App.css';
-import Movie from './Movie';
-import {
-  Autocomplete,
-  Button,
-  Container,
-  Grid,
-  Stack,
-  TextField,
-} from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Autocomplete, Container, Stack, TextField } from '@mui/material';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import MovieList from './MovieList';
 import DetailMovie from './DetailMovie';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 export type MovieType = {
   title: string;
   poster_path: string;
+  overview: string;
   id: number;
 };
 
-function App() {
-  const [movies, setMovies] = useState<MovieType[]>([]);
-  const [term, setTerm] = useState('');
+export type MoviesType = MovieType[];
 
+function App() {
+  const [movies, setMovies] = useState<MoviesType>([]);
+  const [term, setTerm] = useState('');
   const options = {
     method: 'GET',
     headers: {
@@ -51,61 +45,39 @@ function App() {
     )
       .then((res) => res.json())
       .then((data) => setMovies(data.results));
-    console.log(movies);
   };
-
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    event.preventDefault();
-    console.log(event);
-  };
-
   return (
-    <>
-      <Container sx={{ mb: 10 }}>
-        <BrowserRouter>
-          <Stack spacing={2} sx={{ width: 300 }}>
-            <Autocomplete
-              freeSolo
-              id="free-solo-2-demo"
-              disableClearable
-              options={movies.map((option) => option.title)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Hledej"
-                  InputProps={{
-                    ...params.InputProps,
-                    type: 'search',
-                  }}
-                  onChange={handleChange}
-                />
-              )}
+    <Container sx={{ m: 5 }}>
+      <Stack spacing={2} sx={{ width: 300 }}>
+        <Autocomplete
+          freeSolo
+          id="free-solo-2-demo"
+          disableClearable
+          options={movies.map((option) => option.title)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Hledej"
+              InputProps={{
+                ...params.InputProps,
+                type: 'search',
+              }}
+              onChange={handleChange}
             />
-          </Stack>
+          )}
+        />
+      </Stack>
 
-          <Grid container spacing={4}>
-            {movies.map((movie) => (
-              <Grid item xs={4}>
-                <Button
-                  component={RouterLink}
-                  to="/movies/:movie.title"
-                  onClick={handleClick}
-                >
-                  <Movie movie={movie} />
-                </Button>
-              </Grid>
-            ))}
-          </Grid>
-
-          <Routes>
-            <Route
-              path="/movies/:movie.title"
-              element={<DetailMovie movie={movies} />}
-            />
-          </Routes>
-        </BrowserRouter>
-      </Container>
-    </>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<MovieList movies={movies} />} />
+          <Route
+            path="/movie/:title"
+            element={<DetailMovie movie={movies} />}
+          />
+        </Routes>
+      </BrowserRouter>
+    </Container>
   );
 }
 

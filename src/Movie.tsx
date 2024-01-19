@@ -1,12 +1,13 @@
-import React, { FC } from 'react';
-import { MovieType } from './App';
+import React from 'react';
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { MovieType } from './App';
 
 export type MovieProps = {
   movie: MovieType;
 };
 
-const Movie: FC<MovieProps> = ({ movie }) => {
+const Movie: React.FC<MovieProps> = ({ movie }) => {
   return (
     <>
       <CardContent>
@@ -19,11 +20,7 @@ const Movie: FC<MovieProps> = ({ movie }) => {
           />
 
           <Typography gutterBottom variant="h6">
-            {movie.title}
-          </Typography>
-
-          <Typography variant="body2" color="text.secondary">
-            herci atd
+            <Link to={`/movie/${movie.title}`}>{movie.title}</Link>
           </Typography>
         </Card>
       </CardContent>
