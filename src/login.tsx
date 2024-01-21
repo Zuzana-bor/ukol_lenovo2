@@ -1,4 +1,9 @@
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from 'firebase/auth';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -9,6 +14,7 @@ import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Button } from '@mui/material';
+import { provider } from './firebase';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,6 +45,35 @@ const Login = () => {
       const errorMessage = error.message;
       console.error('Error creating user:', errorCode, errorMessage);
     }
+  };
+
+  const handleSignUpGoogle = () => {
+    const auth = getAuth();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        if (credential) {
+          const token = credential.accessToken;
+          // The signed-in user info.
+          const user = result.user;
+          console.log(user);
+        } else {
+          console.error('credential is null');
+        }
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
   };
 
   return (
@@ -76,6 +111,9 @@ const Login = () => {
       </FormControl>
       <Button variant="contained" onClick={handleSignUp}>
         Log in
+      </Button>
+      <Button variant="contained" onClick={handleSignUpGoogle}>
+        Log in by google
       </Button>
     </Box>
   );
