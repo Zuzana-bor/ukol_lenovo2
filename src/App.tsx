@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MovieList from './MovieList';
 import DetailMovie from './DetailMovie';
 import { ChangeEvent, useEffect, useState } from 'react';
+import Login from './login';
 
 export type MovieType = {
   title: string;
@@ -14,7 +15,7 @@ export type MovieType = {
 
 export type MoviesType = MovieType[];
 
-function App() {
+const App: React.FC = () => {
   const [movies, setMovies] = useState<MoviesType>([]);
   const [term, setTerm] = useState('');
   const options = {
@@ -47,38 +48,41 @@ function App() {
       .then((data) => setMovies(data.results));
   };
   return (
-    <Container sx={{ m: 5 }}>
-      <Stack spacing={2} sx={{ width: 300 }}>
-        <Autocomplete
-          freeSolo
-          id="free-solo-2-demo"
-          disableClearable
-          options={movies.map((option) => option.title)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Hledej"
-              InputProps={{
-                ...params.InputProps,
-                type: 'search',
-              }}
-              onChange={handleChange}
-            />
-          )}
-        />
-      </Stack>
-
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<MovieList movies={movies} />} />
-          <Route
-            path="/movie/:title"
-            element={<DetailMovie movie={movies} />}
+    <>
+      <Login />
+      <Container sx={{ m: 5 }}>
+        <Stack spacing={2} sx={{ width: 300 }}>
+          <Autocomplete
+            freeSolo
+            id="free-solo-2-demo"
+            disableClearable
+            options={movies.map((option) => option.title)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Hledej"
+                InputProps={{
+                  ...params.InputProps,
+                  type: 'search',
+                }}
+                onChange={handleChange}
+              />
+            )}
           />
-        </Routes>
-      </BrowserRouter>
-    </Container>
+        </Stack>
+
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<MovieList movies={movies} />} />
+            <Route
+              path="/movie/:title"
+              element={<DetailMovie movie={movies} />}
+            />
+          </Routes>
+        </BrowserRouter>
+      </Container>
+    </>
   );
-}
+};
 
 export default App;
