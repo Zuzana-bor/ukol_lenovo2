@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MovieList from './MovieList';
 import DetailMovie from './DetailMovie';
 import { ChangeEvent, useEffect, useState } from 'react';
-import Login from './login';
+import Sign from './sign';
 
 export type MovieType = {
   title: string;
@@ -49,8 +49,8 @@ const App: React.FC = () => {
   };
   return (
     <>
-      <Login />
       <Container sx={{ m: 5 }}>
+        <Sign />
         <Stack spacing={2} sx={{ width: 300 }}>
           <Autocomplete
             freeSolo

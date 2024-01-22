@@ -3,6 +3,7 @@ import {
   getAuth,
   signInWithPopup,
   GoogleAuthProvider,
+  User,
 } from 'firebase/auth';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
@@ -15,11 +16,13 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Button } from '@mui/material';
 import { provider } from './firebase';
+import Alert from '@mui/joy/Alert';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
 
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -39,11 +42,14 @@ const Login = () => {
       );
       const user = userCredential.user;
       console.log('User signed up:', user);
+      setAlertMessage('blahopřeji jste zaregistrován');
+
       // You might want to redirect or perform other actions upon successful sign-up
     } catch (error: any) {
       const errorCode = error.code;
       const errorMessage = error.message;
       console.error('Error creating user:', errorCode, errorMessage);
+      setAlertMessage(errorMessage);
     }
   };
 
@@ -78,6 +84,7 @@ const Login = () => {
 
   return (
     <Box>
+      {alertMessage && <Alert component="div">{alertMessage}</Alert>}
       <FormControl>
         <InputLabel htmlFor="my-input">Email address</InputLabel>
         <OutlinedInput
